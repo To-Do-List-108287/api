@@ -6,11 +6,9 @@ import com._108287.api.entities.TaskPriority;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @Getter
@@ -18,9 +16,9 @@ public class ResponseTaskDTO {
   @Valid @NotNull private Long id;
   @Valid @NotNull private String title;
   @Valid @NotNull private String description;
-  @Valid @NotNull private LocalDateTime creationDate;
-  @Valid @NotNull private LocalDateTime lastUpdated;
-  @Valid @NotNull private LocalDateTime deadline;
+  @Valid @NotNull private LocalDate creationDate;
+  @Valid @NotNull private LocalDate lastUpdated;
+  @Valid @NotNull private LocalDate deadline;
   @Valid @NotNull private TaskCompletionStatus completionStatus;
   @Valid @NotNull private TaskPriority priority;
 

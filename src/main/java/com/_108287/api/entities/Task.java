@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tasks")
@@ -31,15 +31,15 @@ public class Task {
 
   @NotNull
   @Column(nullable = false)
-  private LocalDateTime creationDate = LocalDateTime.now();
+  private LocalDate creationDate = LocalDate.now();
 
   @NotNull
   @Column(nullable = false)
-  private LocalDateTime lastUpdated = LocalDateTime.now();
+  private LocalDate lastUpdated = LocalDate.now();
 
   @NotNull
   @Column(nullable = false)
-  private LocalDateTime deadline;
+  private LocalDate deadline;
 
   @Enumerated(EnumType.STRING)
   @NotNull
@@ -51,7 +51,7 @@ public class Task {
   @Column(nullable = false)
   private TaskPriority priority;
 
-  public Task(String sub, String title, String description, LocalDateTime deadline, TaskPriority priority) {
+  public Task(String sub, String title, String description, LocalDate deadline, TaskPriority priority) {
     this.sub = sub;
     this.title = title;
     this.description = description;
