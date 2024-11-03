@@ -24,9 +24,4 @@ public class AuthController {
       .orElseGet(() -> new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
   }
 
-  @GetMapping("/hello")
-  public ResponseEntity<String> hello(){
-    return ResponseEntity.ok("hello");
-  }
-
 }
