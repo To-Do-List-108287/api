@@ -2,6 +2,7 @@ package com._108287.api.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Table(name = "tasks")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Task {
 
   @Id
@@ -50,6 +52,16 @@ public class Task {
   @NotNull
   @Column(nullable = false)
   private TaskPriority priority;
+
+  public Task(Long id, String sub, String title, String description, LocalDate deadline, TaskPriority priority) {
+    // for testing
+    this.id = id;
+    this.sub = sub;
+    this.title = title;
+    this.description = description;
+    this.deadline = deadline;
+    this.priority = priority;
+  }
 
   public Task(String sub, String title, String description, LocalDate deadline, TaskPriority priority) {
     this.sub = sub;

@@ -13,14 +13,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 public class ResponseTaskDTO {
-  @Valid @NotNull private Long id;
-  @Valid @NotNull private String title;
-  @Valid @NotNull private String description;
-  @Valid @NotNull private LocalDate creationDate;
-  @Valid @NotNull private LocalDate lastUpdated;
-  @Valid @NotNull private LocalDate deadline;
-  @Valid @NotNull private TaskCompletionStatus completionStatus;
-  @Valid @NotNull private TaskPriority priority;
+  private Long id;
+  private String title;
+  private String description;
+  private LocalDate creationDate;
+  private LocalDate lastUpdated;
+  private LocalDate deadline;
+  private TaskCompletionStatus completionStatus;
+  private TaskPriority priority;
 
   public static ResponseTaskDTO fromTaskEntity(Task task) {
     return new ResponseTaskDTO(
