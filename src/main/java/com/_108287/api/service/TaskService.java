@@ -7,5 +7,6 @@ import java.util.Optional;
 public interface TaskService {
 
   Optional<ResponseTaskDTO> createTask(CreateRequestTaskDTO createRequestTaskDTO, String sub);
+  Optional<Long> deleteTask(Long id, String sub);
 
 }

@@ -29,5 +29,15 @@ public class TaskController {
       .orElse(ResponseEntity.badRequest().build());
   }
 
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteTask(
+    @AuthenticationPrincipal MyUserDetails userDetails,
+    @PathVariable Long id
+  ) {
+    return taskService.deleteTask(id, userDetails.getUsername())
+      .<ResponseEntity<Void>>map(longId -> ResponseEntity.noContent().build())
+      .orElse(ResponseEntity.notFound().build());
+  }
+
 
 }
