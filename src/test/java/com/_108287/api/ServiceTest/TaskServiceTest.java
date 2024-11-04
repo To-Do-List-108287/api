@@ -54,4 +54,31 @@ class TaskServiceTest {
         TaskCompletionStatus.TO_DO, TaskPriority.HIGH);
   }
 
+  @Test
+  void whenDeleteTaskSuccess_ReturnNonEmptyOptionalWithId(){
+    when(taskRepository.findByIdAndSub(1L, "sub")).thenReturn(Optional.of(task));
+
+    Optional<Long> deletedTaskId = taskService.deleteTask(1L, "sub");
+
+    assertThat(deletedTaskId)
+      .isNotEmpty()
+      .hasValue(1L);
+
+    verify(taskRepository, times(1)).findByIdAndSub(1L, "sub");
+    verify(taskRepository, times(1)).delete(task);
+  }
+
+  @Test
+  void whenDeleteTaskFail_ReturnEmptyOptional(){
+    when(taskRepository.findByIdAndSub(1L, "sub")).thenReturn(Optional.empty());
+
+    Optional<Long> deletedTaskId = taskService.deleteTask(1L, "sub");
+
+    assertThat(deletedTaskId)
+      .isEmpty();
+
+    verify(taskRepository, times(1)).findByIdAndSub(1L, "sub");
+    verify(taskRepository, never()).delete(task);
+  }
+
 }
