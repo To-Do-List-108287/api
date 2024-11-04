@@ -20,4 +20,14 @@ public class ITaskService implements TaskService {
     ));
   }
 
+  @Override
+  public Optional<Long> deleteTask(Long id, String sub) {
+    return taskRepository.findByIdAndSub(id, sub)
+      .map(task -> {
+        taskRepository.delete(task);
+        return task.getId();
+      });
+  }
+
+
 }

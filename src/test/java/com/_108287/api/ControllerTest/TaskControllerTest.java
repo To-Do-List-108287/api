@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.hasLength;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import java.time.LocalDate;
@@ -189,6 +190,42 @@ class TaskControllerTest {
     ;
 
     verify(taskService, times(1)).createTask(any(CreateRequestTaskDTO.class), anyString());
+  }
+
+  @Test
+  @WithMockMyUser(username = "sub")
+  void whenDeleteTaskSuccess_ReturnNoContent() {
+    when(taskService.deleteTask(1L, "sub")).thenReturn(Optional.of(1L));
+
+    RestAssuredMockMvc.
+      given().
+        mockMvc(mockMvc).
+      when().
+        delete("api/tasks/1").
+      then().
+        statusCode(HttpStatus.SC_NO_CONTENT)
+        .body(hasLength(0))
+    ;
+
+    verify(taskService, times(1)).deleteTask(1L, "sub");
+  }
+
+  @Test
+  @WithMockMyUser(username = "sub")
+  void whenDeleteTaskFailure_ReturnNotFound() {
+    when(taskService.deleteTask(1L, "sub")).thenReturn(Optional.empty());
+
+    RestAssuredMockMvc.
+      given().
+        mockMvc(mockMvc).
+      when().
+        delete("api/tasks/1").
+      then().
+        statusCode(HttpStatus.SC_NOT_FOUND)
+        .body(hasLength(0))
+    ;
+
+    verify(taskService, times(1)).deleteTask(1L, "sub");
   }
 
 
