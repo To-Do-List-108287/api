@@ -5,14 +5,18 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "tasks")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate // only update changed fields
 public class Task {
 
   @Id
@@ -70,4 +74,5 @@ public class Task {
     this.deadline = deadline;
     this.priority = priority;
   }
+
 }
