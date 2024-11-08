@@ -7,10 +7,13 @@ import com._108287.api.entities.MyUserDetails;
 import com._108287.api.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -50,6 +53,28 @@ public class TaskController {
     return taskService.updateTask(id, updateRequestTaskDTO, userDetails.getUsername())
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping
+  public ResponseEntity<List<ResponseTaskDTO>> getTasks(
+    @AuthenticationPrincipal MyUserDetails userDetails,
+    Sort sort
+  ) {
+    if (sort.isUnsorted()) {
+      // sort not passed in api call (sort object is never null)
+      sort = Sort.by(
+        Sort.Order.desc("creationDate"),
+        Sort.Order.desc("lastUpdated")
+      );
+    } else if (!taskService.taskSortFieldsExist(sort)) {
+      return ResponseEntity.badRequest().build();
+    }
+    return ResponseEntity.ok(
+      taskService.getTasksBySubSorted(
+        userDetails.getUsername(),
+        sort
+      )
+    );
   }
 
 
