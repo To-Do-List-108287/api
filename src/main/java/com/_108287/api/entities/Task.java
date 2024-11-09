@@ -75,8 +75,8 @@ public class Task {
   public Task(String sub, String title, String description, String category, LocalDate deadline, TaskPriority priority) {
     this.sub = sub;
     this.title = title;
-    this.category = category;
     this.description = description;
+    this.category = category;
     this.deadline = deadline;
     this.priority = priority;
   }
