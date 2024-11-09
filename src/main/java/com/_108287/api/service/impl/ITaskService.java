@@ -53,7 +53,7 @@ public class ITaskService implements TaskService {
   @Override
   public Optional<ResponseTaskDTO> updateTask(Long id, UpdateRequestTaskDTO updateRequestTaskDTO, String sub){
     String[] nullPropertyNames = Utils.getNullPropertyNames(updateRequestTaskDTO);
-    if (nullPropertyNames.length == 5) {
+    if (nullPropertyNames.length == updateRequestTaskDTO.getClass().getDeclaredFields().length) {
       // no property to update in the request because all properties are null
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No property to update");
     }

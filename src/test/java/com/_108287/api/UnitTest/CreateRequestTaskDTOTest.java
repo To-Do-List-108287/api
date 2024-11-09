@@ -13,7 +13,7 @@ class CreateRequestTaskDTOTest {
 
   @Test
   void testToTaskEntity() {
-    CreateRequestTaskDTO createRequestTaskDTO = new CreateRequestTaskDTO("title", "description", LocalDate.now(), TaskPriority.HIGH);
+    CreateRequestTaskDTO createRequestTaskDTO = new CreateRequestTaskDTO("title", "description", "category", LocalDate.now(), TaskPriority.HIGH);
 
     Task task = createRequestTaskDTO.toTaskEntity("sub");
 

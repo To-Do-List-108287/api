@@ -16,6 +16,7 @@ public class ResponseTaskDTO {
   private Long id;
   private String title;
   private String description;
+  private String category;
   private LocalDate creationDate;
   private LocalDate lastUpdated;
   private LocalDate deadline;
@@ -27,6 +28,7 @@ public class ResponseTaskDTO {
       task.getId(),
       task.getTitle(),
       task.getDescription(),
+      task.getCategory(),
       task.getCreationDate(),
       task.getLastUpdated(),
       task.getDeadline(),

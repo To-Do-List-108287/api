@@ -44,10 +44,10 @@ class TaskControllerTest {
   TaskService taskService;
 
   CreateRequestTaskDTO createRequestTaskDTO = new CreateRequestTaskDTO(
-    "title", "description", LocalDate.of(2024,12,12), TaskPriority.HIGH
+    "title", "description", "category", LocalDate.of(2024,12,12), TaskPriority.HIGH
   );
   ResponseTaskDTO responseTaskDTO = new ResponseTaskDTO(
-    1L, "title", "description", LocalDate.of(2024,12,12),
+    1L, "title", "description", "category", LocalDate.of(2024,12,12),
     LocalDate.of(2024,11,11), LocalDate.of(2024,10,10),
     TaskCompletionStatus.TO_DO, TaskPriority.HIGH
   );
@@ -63,7 +63,7 @@ class TaskControllerTest {
     // teste de despiste para ver se o spring está a tratar da validação
     // null should be caught by the Spring Validation
     CreateRequestTaskDTO invalidCreateRequestTaskDTO = new CreateRequestTaskDTO(
-      null, "description", LocalDate.of(2024,12,12), TaskPriority.HIGH
+      null, "description", "category", LocalDate.of(2024,12,12), TaskPriority.HIGH
     );
 
     RestAssuredMockMvc.
@@ -85,7 +85,29 @@ class TaskControllerTest {
     // teste de despiste para ver se o spring está a tratar da validação
     // null should be caught by the Spring Validation
     CreateRequestTaskDTO invalidCreateRequestTaskDTO = new CreateRequestTaskDTO(
-      "title", null, LocalDate.of(2024,12,12), TaskPriority.HIGH
+      "title", null, "category", LocalDate.of(2024,12,12), TaskPriority.HIGH
+    );
+
+    RestAssuredMockMvc.
+      given().
+        mockMvc(mockMvc).
+        contentType(ContentType.JSON).
+        body(invalidCreateRequestTaskDTO)
+      .when()
+        .post("api/tasks")
+      .then()
+        .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+    verify(taskService, never()).createTask(any(CreateRequestTaskDTO.class), anyString());
+  }
+
+  @Test
+  @WithMockMyUser(username = "sub")
+  void whenCreateTaskWithInvalidCategory_Return400(){
+    // teste de despiste para ver se o spring está a tratar da validação
+    // null should be caught by the Spring Validation
+    CreateRequestTaskDTO invalidCreateRequestTaskDTO = new CreateRequestTaskDTO(
+      "title", "description", null, LocalDate.of(2024,12,12), TaskPriority.HIGH
     );
 
     RestAssuredMockMvc.
@@ -107,7 +129,7 @@ class TaskControllerTest {
     // teste de despiste para ver se o spring está a tratar da validação
     // null should be caught by the Spring Validation
     CreateRequestTaskDTO invalidCreateRequestTaskDTO = new CreateRequestTaskDTO(
-      "title", "description", null, TaskPriority.HIGH
+      "title", "description", "category", null, TaskPriority.HIGH
     );
 
     RestAssuredMockMvc.
@@ -129,7 +151,7 @@ class TaskControllerTest {
     // teste de despiste para ver se o spring está a tratar da validação
     // null should be caught by the Spring Validation
     CreateRequestTaskDTO invalidCreateRequestTaskDTO = new CreateRequestTaskDTO(
-      "title", "description", LocalDate.of(2024,12,12), null
+      "title", "description", "category", LocalDate.of(2024,12,12), null
     );
 
     RestAssuredMockMvc.
@@ -163,6 +185,7 @@ class TaskControllerTest {
         .body("id", is(1))
         .body("title", is("title"))
         .body("description", is("description"))
+        .body("category", is("category"))
         .body("creationDate", is("2024-12-12"))
         .body("lastUpdated", is("2024-11-11"))
         .body("deadline", is("2024-10-10"))

@@ -30,9 +30,9 @@ class TaskServiceTest {
   ITaskService taskService;
 
   CreateRequestTaskDTO createRequestTaskDTO = new CreateRequestTaskDTO(
-    "title", "description", LocalDate.of(2024,12,12), TaskPriority.HIGH
+    "title", "description", "category", LocalDate.of(2024,12,12), TaskPriority.HIGH
   );
-  Task task = new Task(1L, "sub", "title", "description", LocalDate.of(2024,12,12),
+  Task task = new Task(1L, "sub", "title", "description", "category", LocalDate.of(2024,12,12),
     TaskPriority.HIGH);
 
 
