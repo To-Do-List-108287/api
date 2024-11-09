@@ -37,6 +37,10 @@ public class Task {
 
   @NotNull
   @Column(nullable = false)
+  private String category;
+
+  @NotNull
+  @Column(nullable = false)
   private LocalDate creationDate = LocalDate.now();
 
   @NotNull
@@ -57,20 +61,22 @@ public class Task {
   @Column(nullable = false)
   private TaskPriority priority;
 
-  public Task(Long id, String sub, String title, String description, LocalDate deadline, TaskPriority priority) {
+  public Task(Long id, String sub, String title, String description, String category, LocalDate deadline, TaskPriority priority) {
     // for testing
     this.id = id;
     this.sub = sub;
     this.title = title;
     this.description = description;
+    this.category = category;
     this.deadline = deadline;
     this.priority = priority;
   }
 
-  public Task(String sub, String title, String description, LocalDate deadline, TaskPriority priority) {
+  public Task(String sub, String title, String description, String category, LocalDate deadline, TaskPriority priority) {
     this.sub = sub;
     this.title = title;
     this.description = description;
+    this.category = category;
     this.deadline = deadline;
     this.priority = priority;
   }

@@ -12,7 +12,7 @@ class ResponseTaskDTOTest {
 
   @Test
   void testFromTaskEntity() {
-    Task task = new Task(1L, "sub", "title", "description", LocalDate.now(), LocalDate.now(), LocalDate.now(), TaskCompletionStatus.TO_DO, TaskPriority.HIGH);
+    Task task = new Task(1L, "sub", "title", "description", "category", LocalDate.now(), LocalDate.now(), LocalDate.now(), TaskCompletionStatus.TO_DO, TaskPriority.HIGH);
 
     ResponseTaskDTO responseTaskDTO = ResponseTaskDTO.fromTaskEntity(task);
 

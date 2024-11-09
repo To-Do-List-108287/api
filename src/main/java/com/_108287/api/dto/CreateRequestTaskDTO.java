@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class CreateRequestTaskDTO {
   @NotNull private String title;
   @NotNull private String description;
+  @NotNull private String category;
   @NotNull private LocalDate deadline;
   @NotNull private TaskPriority priority;
 
@@ -21,6 +22,7 @@ public class CreateRequestTaskDTO {
       sub,
       this.title,
       this.description,
+      this.category,
       this.deadline,
       this.priority
     );
