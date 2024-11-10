@@ -1,7 +1,6 @@
 package com._108287.api.specifications;
 
 import com._108287.api.entities.Task;
-import com._108287.api.entities.TaskCompletionStatus;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
@@ -26,15 +25,6 @@ public class TaskSpecification {
         return cb.conjunction();
       }
       return cb.equal(root.get("category"), category);
-    };
-  }
-
-  public static Specification<Task> hasCompletionStatus(TaskCompletionStatus completionStatus) {
-    return (Root<Task> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-      if (completionStatus == null) {
-        return cb.conjunction();
-      }
-      return cb.equal(root.get("completionStatus"), completionStatus);
     };
   }
 

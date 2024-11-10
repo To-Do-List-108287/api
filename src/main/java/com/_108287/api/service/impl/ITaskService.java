@@ -4,7 +4,6 @@ import com._108287.api.dto.CreateRequestTaskDTO;
 import com._108287.api.dto.ResponseTaskDTO;
 import com._108287.api.dto.UpdateRequestTaskDTO;
 import com._108287.api.entities.Task;
-import com._108287.api.entities.TaskCompletionStatus;
 import com._108287.api.repository.TaskRepository;
 import com._108287.api.service.TaskService;
 import com._108287.api.specifications.TaskSpecification;
@@ -88,17 +87,20 @@ public class ITaskService implements TaskService {
   public List<ResponseTaskDTO> getTasksBySubSortedAndFiltered(
     String sub,
     Sort sort,
-    String category,
-    TaskCompletionStatus completionStatus
+    String category
   ) {
     return taskRepository.findAll(
       where(TaskSpecification.hasSub(sub)
-          .and(TaskSpecification.hasCategory(category))
-          .and(TaskSpecification.hasCompletionStatus(completionStatus))),
+          .and(TaskSpecification.hasCategory(category))),
       sort
       ).stream()
       .map(ResponseTaskDTO::fromTaskEntity)
       .toList();
+  }
+
+  @Override
+  public List<String> getCategoriesBySub(String sub) {
+    return taskRepository.findDistinctCategoriesBySub(sub);
   }
 
 
