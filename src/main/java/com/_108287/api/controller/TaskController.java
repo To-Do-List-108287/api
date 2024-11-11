@@ -4,6 +4,7 @@ import com._108287.api.dto.CreateRequestTaskDTO;
 import com._108287.api.dto.ResponseTaskDTO;
 import com._108287.api.dto.UpdateRequestTaskDTO;
 import com._108287.api.entities.MyUserDetails;
+import com._108287.api.entities.TaskCompletionStatus;
 import com._108287.api.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -59,8 +60,9 @@ public class TaskController {
   public ResponseEntity<List<ResponseTaskDTO>> getTasks(
     @AuthenticationPrincipal MyUserDetails userDetails,
     Sort sort,
-    @RequestParam(required = false) String category
-  ) {
+    @RequestParam(required = false) String category,
+    @RequestParam(required = false) TaskCompletionStatus completionStatus
+    ) {
     if (sort.isUnsorted()) {
       // sort not passed in api call (sort object is never null)
       sort = Sort.by(
@@ -74,7 +76,8 @@ public class TaskController {
       taskService.getTasksBySubSortedAndFiltered(
         userDetails.getUsername(),
         sort,
-        category
+        category,
+        completionStatus
       )
     );
   }
