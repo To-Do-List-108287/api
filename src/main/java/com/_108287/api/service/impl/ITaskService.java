@@ -4,8 +4,10 @@ import com._108287.api.dto.CreateRequestTaskDTO;
 import com._108287.api.dto.ResponseTaskDTO;
 import com._108287.api.dto.UpdateRequestTaskDTO;
 import com._108287.api.entities.Task;
+import com._108287.api.entities.TaskCompletionStatus;
 import com._108287.api.repository.TaskRepository;
 import com._108287.api.service.TaskService;
+import com._108287.api.specifications.TaskSpecification;
 import com._108287.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class ITaskService implements TaskService {
@@ -81,11 +85,25 @@ public class ITaskService implements TaskService {
   }
 
   @Override
-  public List<ResponseTaskDTO> getTasksBySubSorted(String sub, Sort sort) {
-    return taskRepository.findBySub(sub, sort)
-      .stream()
+  public List<ResponseTaskDTO> getTasksBySubSortedAndFiltered(
+    String sub,
+    Sort sort,
+    String category,
+    TaskCompletionStatus completionStatus
+  ) {
+    return taskRepository.findAll(
+      where(TaskSpecification.hasSub(sub)
+          .and(TaskSpecification.hasCategory(category))
+          .and(TaskSpecification.hasCompletionStatus(completionStatus))),
+      sort
+      ).stream()
       .map(ResponseTaskDTO::fromTaskEntity)
       .toList();
+  }
+
+  @Override
+  public List<String> getCategoriesBySub(String sub) {
+    return taskRepository.findDistinctCategoriesBySub(sub);
   }
 
 
