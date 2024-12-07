@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
@@ -57,9 +58,15 @@ public class IJwtService implements JwtService {
       new String(decoder.decode(tokenParts[1])),
       JwtPayloadDTO.class
     );
-    Optional<RSAPublicKey> publicKey = getPublicKey(header.getKid());
-    return publicKey
-      .map(rsaPublicKey -> Jwts.parser().verifyWith(rsaPublicKey).build().parseSignedClaims(token).getPayload());
+    try {
+      Optional<RSAPublicKey> publicKey = getPublicKey(header.getKid());
+      return publicKey
+        .map(rsaPublicKey -> Jwts.parser().verifyWith(rsaPublicKey).build().parseSignedClaims(token).getPayload());
+    } catch (ExpiredJwtException e) {
+      logger.error(e.getMessage());
+      return Optional.empty();
+    }
+
   }
 
   private Optional<RSAPublicKey> getPublicKey(String kid) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -67,8 +74,7 @@ public class IJwtService implements JwtService {
       jwksUrl,
       PublicKeyResponseDTO.class
     );
-    System.out.println("jwks");
-    System.out.println(jwks);
+
     if (jwks != null){
       for (PublicKeyContentDTO publicKeyContentDTO : jwks.getKeys()) {
         if (publicKeyContentDTO.getKid().equals(kid)){
@@ -79,7 +85,7 @@ public class IJwtService implements JwtService {
 
           RSAPublicKeySpec spec = new RSAPublicKeySpec(modBigInt, expBigInt);
           KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-          System.out.println("returning");
+
           return Optional.of((RSAPublicKey) keyFactory.generatePublic(spec));
         }
       }
