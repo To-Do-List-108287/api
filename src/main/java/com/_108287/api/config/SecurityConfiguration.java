@@ -28,7 +28,8 @@ public class SecurityConfiguration {
         request ->request
           .requestMatchers(
             "/api/auth/sign-in",
-          "/error")
+          "/error",
+            "/actuator/health")
           .permitAll()
           .anyRequest()
           .authenticated())
