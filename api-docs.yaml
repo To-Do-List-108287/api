@@ -1,0 +1,278 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/tasks/{id}:
+    put:
+      tags:
+      - task-controller
+      summary: Update a user's existing task.
+      description: This endpoint allows the user to update one of his tasks. The authenticated
+        user has to be associated with the task is trying to update.
+      operationId: updateTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRequestTaskDTO"
+        required: true
+      responses:
+        "404":
+          description: Task for the given id and user not found.
+          content:
+            application/json: {}
+        "200":
+          description: Successfully updated task and return respective updated record.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseTaskDTO"
+    delete:
+      tags:
+      - task-controller
+      summary: Delete a user's existing task.
+      description: This endpoint allows the user to delete one of his tasks. The authenticated
+        user has to be associated with the task is trying to delete.
+      operationId: deleteTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "204":
+          description: Successfully deleted task.
+        "404":
+          description: Task for the given id and authenticated user not found.
+          content:
+            application/json: {}
+  /api/tasks:
+    get:
+      tags:
+      - task-controller
+      summary: "Retrieve all tasks related to an authenticated user, optionally filtered\
+        \ by category and/or completion status, and sorted as specified."
+      description: "This endpoint allows to get all tasks related to an authenticated\
+        \ user. The tasks can be optionally filtered by category or task completion\
+        \ status. By default, the tasks are retrieved in descending order of creation\
+        \ date (1st criteria) and descending order of last update time (2nd criteria).\
+        \ Optionally, this sorting order can also be changed."
+      operationId: getTasks
+      parameters:
+      - name: sort
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/Sort"
+      - name: category
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: completionStatus
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - to_do
+          - in_progress
+          - done
+      responses:
+        "200":
+          description: Successfully retrieved list of tasks by specified sorting order
+            and filtering options.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ResponseTaskDTO"
+        "400":
+          description: "Bad request. This may occur due to various reasons, including\
+            \ but not limited to: specified task sorting field does not exist."
+          content:
+            application/json: {}
+    post:
+      tags:
+      - task-controller
+      summary: Create a new task.
+      description: This endpoint allows the user to create a new task. The authenticated
+        user is associated with the task.
+      operationId: createTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRequestTaskDTO"
+        required: true
+      responses:
+        "400":
+          description: Bad Request due to invalid task details.
+          content:
+            application/json: {}
+        "201":
+          description: Task successfully created and return respective created record.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseTaskDTO"
+  /api/tasks/categories:
+    get:
+      tags:
+      - task-controller
+      summary: Retrieve all task categories related to an authenticated user's tasks.
+      description: This endpoint allows to get all task categories related to an authenticated
+        user.
+      operationId: getCategories
+      responses:
+        "200":
+          description: Successfully retrieved list of task categories of an authenticated
+            user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /api/auth/sign-in:
+    get:
+      tags:
+      - auth-controller
+      summary: Exchange the authorization code for the access token.
+      description: This endpoint exchanges an authorization code received during the
+        OAuth flow for an access token.
+      operationId: getCodeToken
+      parameters:
+      - name: code
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successfully retrieved the access token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationResponseDTO"
+        "400":
+          description: Bad Request. The authorization code was not provided.
+          content:
+            application/json: {}
+        "401":
+          description: Unauthorized. The provided authorization code is invalid or
+            expired.
+          content:
+            application/json: {}
+components:
+  schemas:
+    UpdateRequestTaskDTO:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        deadline:
+          type: string
+          format: date
+        completionStatus:
+          type: string
+          enum:
+          - to_do
+          - in_progress
+          - done
+        priority:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+    ResponseTaskDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        creationDate:
+          type: string
+          format: date
+        lastUpdated:
+          type: string
+          format: date
+        deadline:
+          type: string
+          format: date
+        completionStatus:
+          type: string
+          enum:
+          - to_do
+          - in_progress
+          - done
+        priority:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+    CreateRequestTaskDTO:
+      required:
+      - category
+      - deadline
+      - description
+      - priority
+      - title
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        deadline:
+          type: string
+          format: date
+        priority:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+    Sort:
+      type: object
+      properties:
+        sort:
+          type: array
+          items:
+            type: string
+    AuthenticationResponseDTO:
+      type: object
+      properties:
+        token:
+          type: string
+        expiresIn:
+          type: integer
+          format: int32

@@ -29,7 +29,10 @@ public class SecurityConfiguration {
           .requestMatchers(
             "/api/auth/sign-in",
           "/error",
-            "/actuator/health")
+            "/actuator/health",
+            "v3/api-docs.yaml",
+            "v3/api-docs/**",
+            "swagger-ui/**")
           .permitAll()
           .anyRequest()
           .authenticated())
